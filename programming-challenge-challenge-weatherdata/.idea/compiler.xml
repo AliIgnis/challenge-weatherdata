@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="programming-challenge-challenge-weatherdata" />
         <module name="challenge" />
       </profile>
     </annotationProcessing>

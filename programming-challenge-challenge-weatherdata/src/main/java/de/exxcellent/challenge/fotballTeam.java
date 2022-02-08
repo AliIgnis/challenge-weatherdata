@@ -1,5 +1,5 @@
 package de.exxcellent.challenge;
-public class fotballTeam {
+public class fotballTeam{
     private int goals;
     private int goalsAllowed;
     private String teamName;
@@ -8,6 +8,13 @@ public class fotballTeam {
         this.teamName = teamName;
         this.goals = goals;
         this.goalsAllowed = goalsAllowed;
+    }
+
+    void init(String fileLine) {
+        String fields[] = fileLine.split(",");
+        teamName = fields[0];
+        goalsAllowed = Integer.parseInt(fields[1]);
+        goals = Integer.parseInt(fields[2]);
     }
 
     public int getGoals() {
@@ -26,9 +33,8 @@ public class fotballTeam {
         this.goalsAllowed = goalsAllowed;
     }
 
-    public int goalSpread() {
-        int spread = goalsAllowed - goals;
-        return (spread < 0 ? spread * -1 : spread);
+    public double calcSpread() {
+        return helperFunction.calcSpread(goals, goalsAllowed);
     }
 
     public String getTeamName() {

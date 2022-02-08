@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class WeatherData {
+public class WeatherData{
 
     public static final int positionOfMinTemperatureInCsv = 2;
     public static final int positionOfMaxTemperatureInCsv = 1;
@@ -13,42 +13,33 @@ public class WeatherData {
     private ArrayList<dayTemperature> temperaturesOfEachDay = new ArrayList<>();
 
     WeatherData(String filePath) {
-
-        try (Scanner scanner = new Scanner(new File(filePath));) {
-            boolean readFirstLine = false;
-            while (scanner.hasNextLine()) {
-                if (readFirstLine) {
-                    temperaturesOfEachDay.add(csvLineToDayTemperature(scanner.nextLine()));
-                } else {
-                    scanner.nextLine();
-                    readFirstLine = true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        fillArrayListWithFromFile(filePath, true);
     }
 
-    private dayTemperature csvLineToDayTemperature(String line){
+    private void fillArrayListWithFromFile(String filePath, boolean header) {
+        for (String line:readData.fillArrayListWithDataFromFile(filePath, header)) {
+            temperaturesOfEachDay.add(csvLineToObject(line));
+        };
+    }
+
+    private dayTemperature csvLineToObject(String line){
         String fields[] = line.split(",");
         return new dayTemperature(Integer.parseInt(fields[positionOfDayInCsv]), Double.parseDouble(fields[positionOfMaxTemperatureInCsv]), Double.parseDouble(fields[positionOfMinTemperatureInCsv]));
     }
 
     public void findSmallestSpread () {
-
         if (temperaturesOfEachDay.size() > 0 ) {
-            dayTemperature dayWithLowestSpread = temperaturesOfEachDay.get(0);
-            for(int dayIndex = 1; dayIndex < temperaturesOfEachDay.size(); dayIndex++){
-                dayTemperature dayToCompare = temperaturesOfEachDay.get(dayIndex);
-                if (dayWithLowestSpread.temperatureSpread() > dayToCompare.temperatureSpread()) {
-                    dayWithLowestSpread = dayToCompare;
+            int lowestSpreadIndex = 0;
+            for(int index = 1; index < temperaturesOfEachDay.size(); index++){
+                dayTemperature teamToCompare = temperaturesOfEachDay.get(index);
+                if (temperaturesOfEachDay.get(lowestSpreadIndex).calcSpread() > teamToCompare.calcSpread()) {
+                    lowestSpreadIndex = index;
                 }
             }
-            System.out.printf("Day with smallest temperature spread : %s%n", dayWithLowestSpread.getDay());
+            System.out.printf("Day with smallest temperature spread : %s%n", temperaturesOfEachDay.get(lowestSpreadIndex).getDay());
         } else {
             System.out.println("There is none temperature data");
         }
-
     }
 
 }

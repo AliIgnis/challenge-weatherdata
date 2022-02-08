@@ -5,49 +5,42 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class footballData {
+public class footballData extends readData{
 
     public static final int positionOfGoalsAllowed = 6;
     public static final int positionOfGoals = 5;
-    public static final int positionOfDayInCsv = 0;
+    public static final int positionOfNameInCsv = 0;
     private ArrayList<fotballTeam> dataOfEachFootballTeam = new ArrayList<>();
 
     footballData(String filePath) {
-
-        try (Scanner scanner = new Scanner(new File(filePath));) {
-            boolean readFirstLine = false;
-            while (scanner.hasNextLine()) {
-                if (readFirstLine) {
-                    dataOfEachFootballTeam.add(csvLineToDayTemperature(scanner.nextLine()));
-                } else {
-                    scanner.nextLine();
-                    readFirstLine = true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        fillArrayListWithFromFile(filePath, true);
     }
 
-    private fotballTeam csvLineToDayTemperature(String line){
+    private void fillArrayListWithFromFile(String filePath, boolean header) {
+        for (String line:readData.fillArrayListWithDataFromFile(filePath, header)) {
+            dataOfEachFootballTeam.add(csvLineToObject(line));
+        };
+    }
+
+    private fotballTeam csvLineToObject(String line){
         String fields[] = line.split(",");
-        return new fotballTeam(fields[positionOfDayInCsv], Integer.parseInt(fields[positionOfGoalsAllowed]), Integer.parseInt(fields[positionOfGoals]));
+        return new fotballTeam(fields[positionOfNameInCsv], Integer.parseInt(fields[positionOfGoalsAllowed]), Integer.parseInt(fields[positionOfGoals]));
     }
 
     public void findSmallestSpread () {
+
         if (dataOfEachFootballTeam.size() > 0 ) {
-            fotballTeam teamWithLowestSpread = dataOfEachFootballTeam.get(0);
-            for(int dayIndex = 1; dayIndex < dataOfEachFootballTeam.size(); dayIndex++){
-                fotballTeam teamToCompare = dataOfEachFootballTeam.get(dayIndex);
-                if (teamWithLowestSpread.goalSpread() > teamToCompare.goalSpread()) {
-                    teamWithLowestSpread = teamToCompare;
+            int lowestSpreadIndex = 0;
+            for(int index = 1; index < dataOfEachFootballTeam.size(); index++){
+                fotballTeam teamToCompare = dataOfEachFootballTeam.get(index);
+                if (dataOfEachFootballTeam.get(lowestSpreadIndex).calcSpread() > teamToCompare.calcSpread()) {
+                    lowestSpreadIndex = index;
                 }
             }
-            System.out.printf("Team with smallest goal spread       : %s%n", teamWithLowestSpread.getTeamName());
+            System.out.printf("Team with smallest goal spread       : %s%n", dataOfEachFootballTeam.get(lowestSpreadIndex).getTeamName());
         } else {
             System.out.println("There is no fotball team data");
         }
-
     }
 
 }

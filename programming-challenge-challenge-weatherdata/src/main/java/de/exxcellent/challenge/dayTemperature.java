@@ -1,6 +1,6 @@
 package de.exxcellent.challenge;
 
-public class dayTemperature {
+public class dayTemperature{
     private double min = 0;
     private double max = 0;
     private int day = 0;
@@ -9,6 +9,17 @@ public class dayTemperature {
         this.day = day;
         this.min = min;
         this.max = max;
+    }
+
+    dayTemperature(String fileLine) {
+        init(fileLine);
+    }
+
+    void init(String fileLine) {
+        String fields[] = fileLine.split(",");
+        day = Integer.parseInt(fields[0]);
+        min = Double.parseDouble(fields[1]);
+        max = Double.parseDouble(fields[2]);
     }
 
     public double getMin() {
@@ -35,8 +46,8 @@ public class dayTemperature {
         this.day = day;
     }
 
-    public double temperatureSpread() {
-        return max - min;
+    public double calcSpread() {
+        return helperFunction.calcSpread(min, max);
     }
 
 }
